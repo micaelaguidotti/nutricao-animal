@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Figuras interativas, calculadoras e testes dos capítulos de vitaminas e minerais da apostila de Nutrição Animal (IFFar).">
+<meta name="theme-color" content="#3b0f8c">
+<title>Nutrição Animal Interativa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: site de apoio ao livro para estudantes; capa em degradê violeta-azul, cartões arredondados, laranja = vitaminas, azul = minerais */
+:root{
+  --bg:#f5f4fd; --paper:#ffffff; --ink:#1d1a38; --muted:#5f5b7d; --rule:#e3e0f2; --soft:#efedfb; --accent:#6d28d9;
+  --vit:#c2410c; --vit-v:#f97316; --vit-soft:#ffedd5; --min:#0369a1; --min-v:#0ea5e9; --min-soft:#e0f2fe;
+  --teal:#0f766e; --teal-soft:#ccfbf1; --warn:#be123c; --warn-soft:#ffe4e6; --line:#cdc9e4;
+  --ok:#15803d; --mid:#b45309; --bad:#be123c;
+  --hero:linear-gradient(135deg,#3b0f8c 0%,#6d28d9 48%,#0284c7 100%); --brand:linear-gradient(90deg,#6d28d9,#0284c7);
+  --shadow:0 1px 2px rgba(29,26,56,.06),0 10px 30px -12px rgba(29,26,56,.18);
+  --f-head:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif; --f-body:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e0c1d; --paper:#18152d; --ink:#ecebf8; --muted:#aaa6c8; --rule:#2c2848; --soft:#211d3a; --accent:#a78bfa;
+  --vit:#fb923c; --vit-v:#fb923c; --vit-soft:#3a2211; --min:#38bdf8; --min-v:#38bdf8; --min-soft:#0b2a3e;
+  --teal:#2dd4bf; --teal-soft:#0f302c; --warn:#fb7185; --warn-soft:#3b1520; --line:#3a3560;
+  --ok:#4ade80; --mid:#fbbf24; --bad:#fb7185; --hero:linear-gradient(135deg,#24095c 0%,#4c1d95 50%,#075985 100%); --brand:linear-gradient(90deg,#c4b5fd,#7dd3fc);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -12px rgba(0,0,0,.6); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e0c1d; --paper:#18152d; --ink:#ecebf8; --muted:#aaa6c8; --rule:#2c2848; --soft:#211d3a; --accent:#a78bfa;
+  --vit:#fb923c; --vit-v:#fb923c; --vit-soft:#3a2211; --min:#38bdf8; --min-v:#38bdf8; --min-soft:#0b2a3e;
+  --teal:#2dd4bf; --teal-soft:#0f302c; --warn:#fb7185; --warn-soft:#3b1520; --line:#3a3560;
+  --ok:#4ade80; --mid:#fbbf24; --bad:#fb7185; --hero:linear-gradient(135deg,#24095c 0%,#4c1d95 50%,#075985 100%); --brand:linear-gradient(90deg,#c4b5fd,#7dd3fc);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -12px rgba(0,0,0,.6); color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:1rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:#3b0f8c}
+.wrap{max-width:56rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-head);line-height:1.15;text-wrap:balance;letter-spacing:-.02em}
+
+/* Capa */
+header.top{position:relative;overflow:hidden;background:var(--hero);color:#fff}
+header.top::before,header.top::after{content:"";position:absolute;border-radius:50%;filter:blur(2px);pointer-events:none}
+header.top::before{width:340px;height:340px;right:-90px;top:-120px;background:radial-gradient(circle,rgba(249,115,22,.55),rgba(249,115,22,0) 70%)}
+header.top::after{width:300px;height:300px;left:-110px;bottom:-150px;background:radial-gradient(circle,rgba(56,189,248,.5),rgba(56,189,248,0) 70%)}
+header.top .wrap{position:relative;padding-block:44px 34px}
+.kicker{display:inline-block;font-family:var(--f-head);font-weight:700;font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);padding:5px 12px;border-radius:999px;margin:0}
+h1{font-size:clamp(2.1rem,6vw,3.3rem);font-weight:800;margin:.45em 0 .3em}
+h1 span{background:linear-gradient(90deg,#fed7aa,#bae6fd);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{color:rgba(255,255,255,.88);max-width:40rem;margin:0;font-size:1.06rem}
+.authors{font-family:var(--f-head);font-size:.86rem;color:rgba(255,255,255,.75);margin:1em 0 0}
+.cta{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:12px;margin-top:26px}
+.cta a{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;text-decoration:none;transition:background .2s,transform .2s}
+.cta a:hover{background:rgba(255,255,255,.2);transform:translateY(-2px)}
+.cta .ic{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:1.05rem}
+.cta .v .ic{background:linear-gradient(135deg,#fb923c,#f97316)} .cta .m .ic{background:linear-gradient(135deg,#38bdf8,#0284c7)}
+.cta b{display:block;font-size:1.02rem} .cta small{display:block;color:rgba(255,255,255,.78);font-size:.84rem}
+
+/* Barra de atalhos */
+nav.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--rule)}
+nav.bar .wrap{display:flex;gap:8px;flex-wrap:wrap;padding-block:10px;align-items:center}
+nav.bar .brand{font-family:var(--f-head);font-weight:800;font-size:.95rem;margin-right:auto;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
+nav.bar .brand i{font-style:normal;background:var(--brand);-webkit-background-clip:text;background-clip:text;color:transparent}
+nav.bar a.v,nav.bar a.m{font-family:var(--f-head);font-weight:700;font-size:.86rem;text-decoration:none;padding:6px 14px;border-radius:999px}
+nav.bar a.v{background:var(--vit-soft);color:var(--vit)} nav.bar a.m{background:var(--min-soft);color:var(--min)}
+nav.bar a.v:hover,nav.bar a.m:hover{filter:brightness(.97)}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Capítulos */
+main .wrap{padding-block:8px 72px}
+.chapter{margin-top:40px}
+.chead{display:flex;align-items:center;gap:16px;padding:22px 22px;border-radius:22px;color:#fff;margin-bottom:14px;box-shadow:var(--shadow)}
+.vit .chead{background:linear-gradient(135deg,#ea580c,#f59e0b)} .min .chead{background:linear-gradient(135deg,#0369a1,#06b6d4)}
+.chead .num{flex:none;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-weight:800;font-size:1.5rem;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35)}
+.chead h2{font-size:clamp(1.4rem,4vw,1.9rem);font-weight:800;margin:0}
+.chead p.sub{margin:2px 0 0;color:rgba(255,255,255,.88);font-weight:500}
+.toc{display:grid;grid-template-columns:repeat(auto-fill,minmax(15rem,1fr));gap:10px;margin:0 0 6px;padding:0;list-style:none;counter-reset:t}
+.toc li{counter-increment:t}
+.toc a{position:relative;display:block;font-family:var(--f-head);font-weight:600;font-size:.93rem;padding:12px 14px 12px 54px;background:var(--paper);border:1px solid var(--rule);border-radius:14px;text-decoration:none;color:var(--ink);transition:transform .2s,box-shadow .2s,border-color .2s}
+.toc a::before{content:counter(t);position:absolute;left:12px;top:50%;transform:translateY(-50%);width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:800;font-size:.85rem}
+.vit .toc a::before{background:var(--vit-soft);color:var(--vit)} .min .toc a::before{background:var(--min-soft);color:var(--min)}
+.toc a:hover{transform:translateY(-2px);box-shadow:var(--shadow)} .vit .toc a:hover{border-color:var(--vit-v)} .min .toc a:hover{border-color:var(--min-v)}
+.toc a b{display:block;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.vit .toc a b{color:var(--vit)} .min .toc a b{color:var(--min)}
+
+/* Ferramentas */
+.tool{position:relative;background:var(--paper);border:1px solid var(--rule);border-radius:20px;padding:24px 24px 22px;margin:22px 0;box-shadow:var(--shadow);overflow:hidden}
+.tool::before{content:"";position:absolute;inset:0 0 auto;height:5px}
+.vit .tool::before{background:linear-gradient(90deg,#f97316,#f59e0b)} .min .tool::before{background:linear-gradient(90deg,#0284c7,#06b6d4)}
+.tool .tag{display:inline-block;font-family:var(--f-head);font-weight:800;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.vit .tag{color:var(--vit);background:var(--vit-soft)} .min .tag{color:var(--min);background:var(--min-soft)}
+.tool h3{font-size:1.32rem;font-weight:800;margin:.5em 0 .35em}
+.tool p{margin:.4em 0 .8em}
+.note{color:var(--muted);font-size:.85rem;font-family:var(--f-head)}
+.svgbox{overflow-x:auto;background:var(--soft);border-radius:14px;padding:10px}
+.svgbox svg{display:block;width:100%;height:auto;min-width:520px}
+svg text{font-family:var(--f-head);fill:var(--ink)}
+svg .mut{fill:var(--muted)} svg .box{fill:var(--paper);stroke:var(--line);stroke-width:1.5} svg .ar{stroke:var(--muted);stroke-width:1.8;fill:none}
+svg .boxl{fill:var(--vit-soft);stroke:var(--vit-v);stroke-width:1.5} svg .boxh{fill:var(--min-soft);stroke:var(--min-v);stroke-width:1.5} svg .boxt{fill:var(--teal-soft);stroke:var(--teal);stroke-width:1.5}
+svg .node rect{transition:fill .2s,stroke .2s} svg .node.hit rect{fill:var(--vit-soft);stroke:var(--vit-v);stroke-width:2.5} svg .node.dim{opacity:.3}
+svg .edge{stroke-width:2;fill:none;transition:opacity .2s} svg .edge.ant{stroke:var(--warn);stroke-dasharray:6 4} svg .edge.sin{stroke:var(--teal)}
+svg.net.sel .edge{opacity:.12} svg.net.sel .edge.on{opacity:1;stroke-width:3} svg.net.sel .mnode{opacity:.35} svg.net.sel .mnode.on{opacity:1}
+svg .mnode{cursor:pointer}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.chip{font-family:var(--f-head);font-weight:700;font-size:.85rem;padding:7px 13px;border-radius:999px;cursor:pointer;transition:background .15s,color .15s,transform .15s}
+.chip:hover{transform:translateY(-1px)}
+.vit .chip{border:0;background:var(--vit-soft);color:var(--vit)} .vit .chip[aria-pressed="true"]{background:linear-gradient(135deg,#f97316,#ea580c);color:#fff}
+.min .chip{border:0;background:var(--min-soft);color:var(--min)} .min .chip[aria-pressed="true"]{background:linear-gradient(135deg,#0ea5e9,#0369a1);color:#fff}
+.info{background:var(--soft);padding:12px 14px;min-height:3em;font-size:.95rem;border-radius:12px;margin-top:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px 14px;align-items:end;margin:10px 0 14px}
+.grid label{display:grid;gap:5px;font-family:var(--f-head);font-size:.8rem;font-weight:700;color:var(--muted)}
+.grid input,.grid select{font:inherit;font-size:.95rem;font-weight:500;padding:10px 12px;border:1.5px solid var(--rule);border-radius:12px;background:var(--bg);color:var(--ink);width:100%;transition:border-color .15s}
+.grid input:focus,.grid select:focus{border-color:var(--accent);outline:none}
+.big{font-family:var(--f-head);font-size:1.7rem;font-weight:800;font-variant-numeric:tabular-nums;padding:10px 14px;border-radius:14px;letter-spacing:-.02em}
+.vit .big{color:var(--vit);background:var(--vit-soft)} .min .big{color:var(--min);background:var(--min-soft)}
+.big small{display:block;font-size:.78rem;font-weight:600;color:var(--muted);letter-spacing:0}
+table{border-collapse:separate;border-spacing:0;width:100%;font-family:var(--f-head);font-size:.9rem;border:1px solid var(--rule);border-radius:14px;overflow:hidden}
+.tblw{overflow-x:auto}
+th,td{text-align:left;padding:9px 11px;font-variant-numeric:tabular-nums} thead th{background:var(--soft);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)} tbody tr+tr td{border-top:1px solid var(--rule)}
+span.bar{display:inline-block;width:100px;height:10px;background:var(--soft);border-radius:999px;vertical-align:middle;margin-right:8px;overflow:hidden}
+span.bar span{display:block;height:100%;border-radius:999px} span.bar .ok{background:var(--ok)} span.bar .mid{background:var(--mid)} span.bar .bad{background:var(--bad)}
+.okt{color:var(--ok)} .midt{color:var(--mid)} .badt{color:var(--bad)}
+.q{margin:16px 0} .q p{font-weight:700;margin:0 0 8px} .opts{display:grid;gap:8px}
+.opt{text-align:left;font:inherit;font-size:.94rem;font-weight:500;padding:11px 14px;border:1.5px solid var(--rule);background:var(--bg);color:var(--ink);cursor:pointer;border-radius:12px;transition:border-color .15s,transform .15s}
+.opt:hover{border-color:var(--accent);transform:translateX(2px)} .opt.ok{border-color:var(--ok);background:var(--teal-soft)} .opt.no{border-color:var(--bad);background:var(--warn-soft)}
+.fb{font-size:.88rem;color:var(--muted);margin-top:6px} .score{font-family:var(--f-head);font-size:.82rem;font-weight:700;color:var(--accent);background:var(--soft);padding:3px 10px;border-radius:999px;vertical-align:middle}
+.score:empty{display:none}
+footer{background:var(--paper);border-top:1px solid var(--rule)} footer .wrap{padding-block:26px;font-family:var(--f-head);font-size:.84rem;color:var(--muted)}
+@media (max-width:480px){.tool{padding:20px 16px 18px;border-radius:18px}.chead{padding:18px 16px}.chead .num{width:48px;height:48px;font-size:1.25rem}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+  <p class="kicker">Apostila de Nutrição Animal · IFFar</p>
+  <h1>Nutrição Animal <span>interativa</span></h1>
+  <p class="lede">Figuras clicáveis, calculadoras e testes com correção imediata para estudar vitaminas e minerais na prática. Use os QR codes do material impresso ou escolha um capítulo.</p>
+  <div class="cta">
+    <a class="v" href="#vitaminas"><span class="ic">6</span><span><b>Vitaminas</b><small>5 ferramentas · Capítulo 6</small></span></a>
+    <a class="m" href="#minerais"><span class="ic">7</span><span><b>Minerais</b><small>4 ferramentas · Capítulo 7</small></span></a>
+  </div>
+  <p class="authors">Micaela Guidotti Takeuchi · Kátia Maria Cardinal · Instituto Federal Farroupilha (IFFar)</p>
+</div></header>
+
+<nav class="bar" aria-label="Atalhos"><div class="wrap">
+  <a class="brand" href="#">nutricao<i>-animal</i></a>
+  <a class="v" href="#vitaminas">Vitaminas</a>
+  <a class="m" href="#minerais">Minerais</a>
+</div></nav>
+
+<main><div class="wrap">
+
+<section class="chapter vit" id="vitaminas">
+  <div class="chead"><span class="num">6</span><div><h2>Capítulo 6 · Vitaminas</h2>
+  <p class="sub">Cinco ferramentas</p></div></div>
+  <ul class="toc">
+    <li><a href="#f6-7"><b>Figura 6.7</b>Complexo B no metabolismo</a></li>
+    <li><a href="#ex6-1"><b>Exemplo 6.1</b>Conversão de β-caroteno</a></li>
+    <li><a href="#ex6-2"><b>Exemplo 6.2 · Quadros 6.6 e 6.7</b>Suplementação de vacas</a></li>
+    <li><a href="#premix"><b>Tabelas 6.3 e 6.4</b>Premix de aves e suínos</a></li>
+    <li><a href="#teste6"><b>Questões</b>Teste-se: vitaminas</a></li>
+  </ul>
+
+  <div class="tool" id="f6-7">
+    <span class="tag">Figura 6.7</span><h3>Vitaminas do complexo B no metabolismo</h3>
+    <p>Selecione uma vitamina para destacar as reações em que ela atua.</p>
+    <div class="chips" id="bChips" role="group" aria-label="Escolher vitamina"></div>
+    <div class="svgbox"><svg viewBox="0 0 760 360" role="img" aria-labelledby="f6t">
+      <title id="f6t">Mapa simplificado do metabolismo energético com os pontos de ação das vitaminas do complexo B</title>
+      <defs><marker id="mM6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="mut"/></marker></defs>
+      <g class="node" data-v="b3"><rect x="20" y="20" width="150" height="50" rx="6" class="box"/><text x="95" y="42" text-anchor="middle" font-weight="700" font-size="13">Glicose</text><text x="95" y="60" text-anchor="middle" font-size="11" class="mut">glicólise: NAD</text></g>
+      <g class="node" data-v="b1"><rect x="20" y="96" width="150" height="50" rx="6" class="box"/><text x="95" y="118" text-anchor="middle" font-weight="700" font-size="13">Via das pentoses</text><text x="95" y="136" text-anchor="middle" font-size="11" class="mut">transcetolase: TPP</text></g>
+      <g class="node" data-v="b3 b7"><rect x="230" y="20" width="160" height="50" rx="6" class="box"/><text x="310" y="42" text-anchor="middle" font-weight="700" font-size="13">Piruvato</text><text x="310" y="60" text-anchor="middle" font-size="11" class="mut">→ oxaloacetato: biotina</text></g>
+      <g class="node" data-v="b1 b2 b3 b5"><rect x="230" y="110" width="160" height="56" rx="6" class="box"/><text x="310" y="132" text-anchor="middle" font-weight="700" font-size="13">Acetil-CoA</text><text x="310" y="150" text-anchor="middle" font-size="11" class="mut">PDH: TPP, FAD, NAD, CoA</text></g>
+      <g class="node" data-v="b1 b2 b3 b5"><rect x="230" y="206" width="160" height="70" rx="35" class="box"/><text x="310" y="236" text-anchor="middle" font-weight="700" font-size="13">Ciclo de Krebs</text><text x="310" y="254" text-anchor="middle" font-size="11" class="mut">α-cetoglutarato DH</text></g>
+      <g class="node" data-v="b2 b3"><rect x="230" y="300" width="160" height="50" rx="6" class="box"/><text x="310" y="322" text-anchor="middle" font-weight="700" font-size="13">Cadeia respiratória</text><text x="310" y="340" text-anchor="middle" font-size="11" class="mut">NADH, FADH₂ → ATP</text></g>
+      <g class="node" data-v="b2 b5 b7"><rect x="450" y="96" width="150" height="80" rx="6" class="box"/><text x="525" y="118" text-anchor="middle" font-weight="700" font-size="13">Ácidos graxos</text><text x="525" y="136" text-anchor="middle" font-size="11" class="mut">β-oxidação: FAD, CoA</text><text x="525" y="152" text-anchor="middle" font-size="11" class="mut">síntese: biotina, ACP</text></g>
+      <g class="node" data-v="b6 b9 b12"><rect x="450" y="206" width="150" height="70" rx="6" class="box"/><text x="525" y="228" text-anchor="middle" font-weight="700" font-size="13">Aminoácidos</text><text x="525" y="246" text-anchor="middle" font-size="11" class="mut">transaminação: PLP</text><text x="525" y="262" text-anchor="middle" font-size="11" class="mut">metionina: folato, B12</text></g>
+      <g class="node" data-v="b7 b12"><rect x="630" y="206" width="120" height="70" rx="6" class="box"/><text x="690" y="228" text-anchor="middle" font-weight="700" font-size="12.5">Propionato</text><text x="690" y="246" text-anchor="middle" font-size="11" class="mut">(ruminantes)</text><text x="690" y="262" text-anchor="middle" font-size="11" class="mut">→ succinil-CoA</text></g>
+      <g class="node" data-v="b9 b12"><rect x="450" y="300" width="300" height="50" rx="6" class="box"/><text x="600" y="322" text-anchor="middle" font-weight="700" font-size="13">Síntese de DNA (purinas, timidina)</text><text x="600" y="340" text-anchor="middle" font-size="11" class="mut">unidades de 1 carbono: THF; reciclagem pela B12</text></g>
+      <path d="M170,45 H224" class="ar" marker-end="url(#mM6)"/>
+      <path d="M95,70 V90" class="ar" marker-end="url(#mM6)"/>
+      <path d="M310,70 V104" class="ar" marker-end="url(#mM6)"/>
+      <path d="M310,166 V200" class="ar" marker-end="url(#mM6)"/>
+      <path d="M310,276 V294" class="ar" marker-end="url(#mM6)"/>
+      <path d="M444,136 H396" class="ar" marker-end="url(#mM6)"/>
+      <path d="M444,241 H396" class="ar" marker-end="url(#mM6)"/>
+      <path d="M690,206 V188 H360 V200" class="ar" stroke-dasharray="4 4" marker-end="url(#mM6)"/>
+    </svg></div>
+    <div class="info" id="bInfo" aria-live="polite">Nenhuma vitamina selecionada.</div>
+  </div>
+
+  <div class="tool" id="ex6-1">
+    <span class="tag">Exemplo 6.1</span><h3>Conversão de β-caroteno em atividade de vitamina A</h3>
+    <div class="grid">
+      <label for="cA_src">Fonte<select id="cA_src"><option value="ret">Retinol (µg)</option><option value="ac">Acetato de retinil (µg)</option><option value="bc" selected>β-caroteno (mg)</option></select></label>
+      <label for="cA_val">Quantidade<input id="cA_val" type="number" min="0" step="any" value="10"></label>
+      <label for="cA_sp">Espécie (para β-caroteno)<select id="cA_sp"><option value="400">Bovinos – 400 UI/mg (NRC, 2001)</option><option value="1667">Aves – 1.667 UI/mg (NRC, 1994)</option><option value="0">Gatos – conversão desprezível</option></select></label>
+      <div class="big" id="cA_out"></div>
+    </div>
+    <p class="note">1 UI de vitamina A = 0,300 µg de retinol = 0,344 µg de acetato de retinil. As equivalências do β-caroteno são convenções de tabela; a conversão real varia com a dieta e o estado vitamínico do animal.</p>
+  </div>
+
+  <div class="tool" id="ex6-2">
+    <span class="tag">Exemplo 6.2 · Quadros 6.6 e 6.7</span><h3>Verificador da suplementação vitamínica de vacas leiteiras</h3>
+    <p>Escolha a referência e a fase. As barras comparam o fornecimento do suplemento com a referência suplementar, como no Quadro 6.6.</p>
+    <div class="grid">
+      <label for="v_ref">Referência<select id="v_ref"><option value="nrc">NRC (2001) – coeficientes históricos</option><option value="nasem" selected>NASEM (2021), conforme Van Saun (2025)</option></select></label>
+      <label for="v_cat">Fase<select id="v_cat"><option value="lac">Lactação</option><option value="pre">Pré-parto próximo (últimas 3 semanas)</option><option value="sec">Vaca seca (NRC, 2001)</option></select></label>
+      <label for="v_pv">Peso vivo (kg)<input id="v_pv" type="number" min="1" value="600"></label>
+      <label for="v_leite">Leite (kg/dia)<input id="v_leite" type="number" min="0" value="30"></label>
+      <label for="v_cons">Consumo do suplemento (g/dia)<input id="v_cons" type="number" min="0" value="150"></label>
+      <label for="v_a">Vitamina A no rótulo (UI/kg)<input id="v_a" type="number" min="0" value="440000"></label>
+      <label for="v_d">Vitamina D no rótulo (UI/kg)<input id="v_d" type="number" min="0" value="120000"></label>
+      <label for="v_e">Vitamina E no rótulo (UI/kg)<input id="v_e" type="number" min="0" value="3000"></label>
+    </div>
+    <div class="tblw" id="v_out" aria-live="polite"></div>
+    <p class="note" id="v_note"></p>
+  </div>
+
+  <div class="tool" id="premix">
+    <span class="tag">Tabelas 6.3 e 6.4 · Exemplo 6.4</span><h3>Verificador de premix para frangos e suínos</h3>
+    <p>Informe a fase, a inclusão do premix e os níveis do rótulo. O aporte por kg de ração é comparado com os níveis de suplementação das Tabelas Brasileiras.</p>
+    <div class="grid">
+      <label for="p_fase">Espécie e fase<select id="p_fase"></select></label>
+      <label for="p_inc">Inclusão (kg/t de ração)<input id="p_inc" type="number" min="0" step="any" value="1"></label>
+      <label for="p_a">Vitamina A (UI/kg de premix)<input id="p_a" type="number" min="0" value="11000000"></label>
+      <label for="p_d">Vitamina D3 (UI/kg de premix)<input id="p_d" type="number" min="0" value="2500000"></label>
+      <label for="p_e">Vitamina E (UI/kg de premix)<input id="p_e" type="number" min="0" value="40000"></label>
+    </div>
+    <div class="tblw" id="p_out" aria-live="polite"></div>
+    <p class="note">Aporte por kg de ração = nível no premix × inclusão (kg/t) ÷ 1.000. Níveis de suplementação de Rocha et al. (2024), Tabelas 7.01 e 7.05 das Tabelas Brasileiras. Perdas no armazenamento e na fabricação não estão consideradas.</p>
+  </div>
+
+  <div class="tool" id="teste6">
+    <span class="tag">Questões de revisão</span><h3>Teste-se: vitaminas <span class="score" id="q6s"></span></h3>
+    <div id="q6"></div>
+  </div>
+</section>
+
+<section class="chapter min" id="minerais">
+  <div class="chead"><span class="num">7</span><div><h2>Capítulo 7 · Minerais</h2>
+  <p class="sub">Quatro ferramentas</p></div></div>
+  <ul class="toc">
+    <li><a href="#f7-4"><b>Figura 7.4</b>Interações entre minerais</a></li>
+    <li><a href="#dcad"><b>Exemplo 7.1</b>Calculadora de DCAD</a></li>
+    <li><a href="#sal"><b>Exemplo 7.2</b>Consumo do suplemento mineral</a></li>
+    <li><a href="#teste7"><b>Questões</b>Teste-se: minerais</a></li>
+  </ul>
+
+  <div class="tool" id="f7-4">
+    <span class="tag">Figura 7.4</span><h3>Principais interações entre minerais</h3>
+    <p>Clique em um elemento, no gráfico ou nos botões, para destacar suas interações.</p>
+    <div class="chips" id="nChips" role="group" aria-label="Escolher elemento"></div>
+    <div class="svgbox"><svg class="net" viewBox="0 0 760 470" role="img" aria-labelledby="f2t"><title id="f2t">Rede de interações antagônicas e sinérgicas entre minerais</title>
+<g id="edges">
+<path class="edge ant" data-a="Ca" data-b="P" d="M150,120 L280,70"/>
+<path class="edge ant" data-a="Ca" data-b="Zn" d="M150,120 L230,330"/>
+<path class="edge ant" data-a="Ca" data-b="Mn" d="M150,120 L120,300"/>
+<path class="edge ant" data-a="Fit" data-b="P" d="M380,230 L280,70"/>
+<path class="edge ant" data-a="Fit" data-b="Zn" d="M380,230 L230,330"/>
+<path class="edge ant" data-a="Fit" data-b="Ca" d="M380,230 L150,120"/>
+<path class="edge ant" data-a="K" data-b="Mg" d="M470,60 L620,110"/>
+<path class="edge ant" data-a="Mo" data-b="Cu" d="M640,320 L520,400"/>
+<path class="edge ant" data-a="S" data-b="Cu" d="M700,220 L520,400"/>
+<path class="edge ant" data-a="S" data-b="Mo" d="M700,220 L640,320"/>
+<path class="edge ant" data-a="Zn" data-b="Cu" d="M230,330 L520,400"/>
+<path class="edge ant" data-a="Fe" data-b="Cu" d="M330,440 L520,400"/>
+<path class="edge ant" data-a="Fe" data-b="Zn" d="M330,440 L230,330"/>
+<path class="edge ant" data-a="Mn" data-b="Fe" d="M120,300 L330,440"/>
+<path class="edge sin" data-a="Se" data-b="VitE" d="M560,180 L470,150"/>
+<path class="edge sin" data-a="Co" data-b="B12" d="M60,200 L40,90"/>
+</g>
+<g font-size="13" font-weight="700">
+<g class="mnode" data-n="Ca"><circle cx="150" cy="120" r="26" class="boxl"/><text x="150" y="125" text-anchor="middle">Ca</text></g>
+<g class="mnode" data-n="P"><circle cx="280" cy="70" r="26" class="boxl"/><text x="280" y="75" text-anchor="middle">P</text></g>
+<g class="mnode" data-n="Mg"><circle cx="620" cy="110" r="26" class="boxl"/><text x="620" y="115" text-anchor="middle">Mg</text></g>
+<g class="mnode" data-n="K"><circle cx="470" cy="60" r="26" class="boxl"/><text x="470" y="65" text-anchor="middle">K</text></g>
+<g class="mnode" data-n="S"><circle cx="700" cy="220" r="26" class="boxl"/><text x="700" y="225" text-anchor="middle">S</text></g>
+<g class="mnode" data-n="Zn"><circle cx="230" cy="330" r="26" class="boxh"/><text x="230" y="335" text-anchor="middle">Zn</text></g>
+<g class="mnode" data-n="Mn"><circle cx="120" cy="300" r="26" class="boxh"/><text x="120" y="305" text-anchor="middle">Mn</text></g>
+<g class="mnode" data-n="Fe"><circle cx="330" cy="440" r="26" class="boxh"/><text x="330" y="445" text-anchor="middle">Fe</text></g>
+<g class="mnode" data-n="Cu"><circle cx="520" cy="400" r="26" class="boxh"/><text x="520" y="405" text-anchor="middle">Cu</text></g>
+<g class="mnode" data-n="Mo"><circle cx="640" cy="320" r="26" class="boxh"/><text x="640" y="325" text-anchor="middle">Mo</text></g>
+<g class="mnode" data-n="Se"><circle cx="560" cy="180" r="26" class="boxh"/><text x="560" y="185" text-anchor="middle">Se</text></g>
+<g class="mnode" data-n="Co"><circle cx="60" cy="200" r="26" class="boxh"/><text x="60" y="205" text-anchor="middle">Co</text></g>
+<g class="mnode" data-n="Fit"><circle cx="380" cy="230" r="34" class="box"/><text x="380" y="235" text-anchor="middle">Fitato</text></g>
+<g class="mnode" data-n="VitE"><circle cx="470" cy="150" r="26" class="boxt"/><text x="470" y="155" text-anchor="middle" font-size="11">Vit. E</text></g>
+<g class="mnode" data-n="B12"><circle cx="40" cy="90" r="26" class="boxt"/><text x="40" y="95" text-anchor="middle" font-size="11">B12</text></g>
+</g>
+<g font-size="12"><path d="M440,452 H480" class="edge ant"/><text x="488" y="456">antagonismo</text><path d="M600,452 H640" class="edge sin"/><text x="648" y="456">sinergia</text></g>
+</svg></div>
+    <div class="info" id="nInfo" aria-live="polite">Nenhum elemento selecionado.</div>
+  </div>
+
+  <div class="tool" id="dcad">
+    <span class="tag">Exemplo 7.1</span><h3>Calculadora da diferença cátion-aniônica (DCAD)</h3>
+    <p>DCAD (mEq/kg MS) = [(Na ÷ 0,023) + (K ÷ 0,039) − (Cl ÷ 0,0355) − (S ÷ 0,016)] × 10, com os teores em % da matéria seca.</p>
+    <div class="grid">
+      <label for="d_na">Sódio (% MS)<input id="d_na" type="number" step="0.01" min="0" value="0.15"></label>
+      <label for="d_k">Potássio (% MS)<input id="d_k" type="number" step="0.01" min="0" value="1.20"></label>
+      <label for="d_cl">Cloro (% MS)<input id="d_cl" type="number" step="0.01" min="0" value="0.80"></label>
+      <label for="d_s">Enxofre (% MS)<input id="d_s" type="number" step="0.01" min="0" value="0.40"></label>
+      <div class="big" id="d_out"></div>
+    </div>
+    <p class="note">Valores negativos caracterizam dietas aniônicas. A recomendação de dietas aniônicas no pré-parto se aplica a vacas multíparas (SANTOS et al., 2019).</p>
+  </div>
+
+  <div class="tool" id="sal">
+    <span class="tag">Exemplo 7.2 · Quadro 7.6</span><h3>Consumo real do suplemento mineral</h3>
+    <p>Consumo (g/animal/dia) = kg fornecidos × 1.000 ÷ (animais × dias).</p>
+    <div class="grid">
+      <label for="s_an">Número de animais<input id="s_an" type="number" min="1" value="120"></label>
+      <label for="s_dias">Dias<input id="s_dias" type="number" min="1" value="30"></label>
+      <label for="s_kg">Fornecido − sobras (kg)<input id="s_kg" type="number" min="0" value="175"></label>
+      <label for="s_esp">Consumo esperado (g/dia)<input id="s_esp" type="number" min="0" value="70"></label>
+      <label for="s_p">Fósforo no rótulo (g/kg)<input id="s_p" type="number" min="0" value="80"></label>
+      <label for="s_na">Sódio no rótulo (g/kg)<input id="s_na" type="number" min="0" value="140"></label>
+      <label for="s_cu">Cobre no rótulo (mg/kg)<input id="s_cu" type="number" min="0" value="1000"></label>
+      <label for="s_co">Cobalto no rótulo (mg/kg)<input id="s_co" type="number" min="0" value="80"></label>
+    </div>
+    <div class="tblw" id="s_out" aria-live="polite"></div>
+    <p class="note">Compare o fornecimento diário com a exigência da categoria nas referências do Quadro 7.4 do capítulo.</p>
+  </div>
+
+  <div class="tool" id="teste7">
+    <span class="tag">Questões de revisão</span><h3>Teste-se: minerais <span class="score" id="q7s"></span></h3>
+    <div id="q7"></div>
+  </div>
+</section>
+
+</div></main>
+
+<footer><div class="wrap">Material didático do IFFar. As figuras foram elaboradas pelas autoras com apoio de inteligência artificial generativa e têm finalidade explicativa. Os cálculos são exercícios de apoio ao texto e não substituem a formulação feita por profissional habilitado.</div></footer>
+
+<script>
+(function(){
+  function fmt(n,d){return (isFinite(n)?n:0).toLocaleString('pt-BR',{maximumFractionDigits:d||0,minimumFractionDigits:d||0})}
+  function $(id){return document.getElementById(id)}
+  function bars(rows,cols){ // rows: [nome, referencia, fornecido, casas]
+    var h='<table><thead><tr><th>'+cols[0]+'</th><th>'+cols[1]+'</th><th>'+cols[2]+'</th><th>Atendimento</th></tr></thead><tbody>';
+    rows.forEach(function(r){var p=r[1]>0?r[2]/r[1]*100:0,c=p>=100?'ok':p>=90?'mid':'bad';
+      h+='<tr><td>'+r[0]+'</td><td>'+fmt(r[1],r[3])+'</td><td>'+fmt(r[2],r[3])+'</td><td><span class="bar"><span class="'+c+'" style="width:'+Math.min(p,100)+'%"></span></span><b class="'+c+'t">'+fmt(p)+'%</b></td></tr>'});
+    return h+'</tbody></table>'}
+  function bind(ids,fn){ids.forEach(function(i){$(i).addEventListener('input',fn);$(i).addEventListener('change',fn)});fn()}
+
+  // ---- Figura 6.7
+  (function(){var info={b1:'<b>Tiamina (TPP):</b> piruvato desidrogenase, α-cetoglutarato desidrogenase e transcetolase (via das pentoses).',b2:'<b>Riboflavina (FAD, FMN):</b> piruvato desidrogenase, ciclo de Krebs, β-oxidação e cadeia respiratória.',b3:'<b>Niacina (NAD, NADP):</b> glicólise, piruvato desidrogenase, ciclo de Krebs e cadeia respiratória.',b5:'<b>Ácido pantotênico (CoA, ACP):</b> formação de acetil-CoA, ciclo de Krebs e metabolismo de ácidos graxos.',b6:'<b>Piridoxina (PLP):</b> transaminação e descarboxilação de aminoácidos.',b7:'<b>Biotina:</b> piruvato carboxilase, acetil-CoA carboxilase e propionil-CoA carboxilase.',b9:'<b>Folato (THF):</b> unidades de um carbono para a síntese de DNA e a regeneração da metionina.',b12:'<b>Cobalamina:</b> metilmalonil-CoA mutase (propionato) e metionina sintase.'};
+    var names={b1:'Tiamina (B1)',b2:'Riboflavina (B2)',b3:'Niacina (B3)',b5:'Ác. pantotênico (B5)',b6:'Piridoxina (B6)',b7:'Biotina (B7)',b9:'Folato (B9)',b12:'Cobalamina (B12)'};
+    var box=$('bInfo'),nodes=document.querySelectorAll('#f6-7 .node'),cur=null,chips=$('bChips');
+    Object.keys(names).forEach(function(k){var b=document.createElement('button');b.type='button';b.className='chip';b.dataset.v=k;b.textContent=names[k];b.setAttribute('aria-pressed','false');
+      b.addEventListener('click',function(){cur=cur===k?null:k;chips.querySelectorAll('.chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.v===cur))});
+        nodes.forEach(function(n){var on=cur&&n.getAttribute('data-v').split(' ').indexOf(cur)>=0;n.classList.toggle('hit',!!on);n.classList.toggle('dim',!!cur&&!on)});
+        box.innerHTML=cur?info[cur]:'Nenhuma vitamina selecionada.'});chips.appendChild(b)});})();
+
+  // ---- Exemplo 6.1
+  bind(['cA_src','cA_val','cA_sp'],function(){var v=parseFloat($('cA_val').value),s=$('cA_src').value;$('cA_sp').disabled=(s!=='bc');
+    if(!(v>=0)){$('cA_out').innerHTML='–<small>informe uma quantidade válida</small>';return}
+    var iu=s==='ret'?v/0.3:s==='ac'?v/0.344:v*parseFloat($('cA_sp').value);
+    $('cA_out').innerHTML=fmt(iu)+' UI<small>'+((s==='bc'&&$('cA_sp').value==='0')?'conversão desprezível no gato':'de vitamina A')+'</small>'});
+
+  // ---- Exemplo 6.2
+  bind(['v_ref','v_cat','v_pv','v_leite','v_cons','v_a','v_d','v_e'],function(){
+    var ref=$('v_ref').value,cat=$('v_cat').value,pv=+$('v_pv').value||0,leite=+$('v_leite').value||0,kg=(+$('v_cons').value||0)/1000;
+    var secOpt=$('v_cat').querySelector('option[value="sec"]'); secOpt.disabled=(ref==='nasem'); if(ref==='nasem'&&cat==='sec'){$('v_cat').value='pre';cat='pre'}
+    var A=110*pv,D,E,note;
+    if(ref==='nrc'){D=30*pv;E=(cat==='lac'?0.8:1.6)*pv;note='Coeficientes históricos do NRC (2001): A 110, D 30 e E 0,8 (lactação) ou 1,6 (vaca seca) UI/kg PV/dia. No exercício do capítulo, o pré-parto usa os coeficientes da vaca seca.'}
+    else{D=(cat==='lac'?40:30)*pv;E=(cat==='lac'?0.8:3)*pv;if(cat==='lac'&&leite>35)A+=1000*(leite-35);
+      note='NASEM (2021), conforme Van Saun (2025): A 110 UI/kg PV/dia, com 1.000 UI a mais por kg de leite acima de 35 kg/dia na lactação; D 30 (pré-parto) e 40 (lactação); E 3 (últimas 3 semanas pré-parto) e 0,8 (lactação) UI/kg PV/dia.'}
+    $('v_out').innerHTML=bars([['Vitamina A',A,(+$('v_a').value||0)*kg,0],['Vitamina D',D,(+$('v_d').value||0)*kg,0],['Vitamina E',E,(+$('v_e').value||0)*kg,0]],['Vitamina','Referência (UI/dia)','Fornecido (UI/dia)']);
+    $('v_note').textContent=note+' São referências suplementares, não limites de segurança; considere também a dieta completa.'});
+
+  // ---- Premix
+  (function(){var T=[['Frangos de corte – 0 a 8 dias',13791,3378,51.7],['Frangos de corte – 8 a 17 dias',12765,3126,47.9],['Frangos de corte – 17 a 27 dias',10824,2651,40.6],['Frangos de corte – 27 a 35 dias',9302,2278,34.9],['Frangos de corte – 35 a 43 dias',8388,2054,31.5],['Frangos de corte – 43 a 49 dias',7817,1915,29.3],['Suínos – 21 a 35 dias',11387,2786,74.4],['Suínos – 35 a 49 dias',10288,2517,67.2],['Suínos – 49 a 63 dias',8588,2101,56.1],['Suínos – 63 a 91 dias',7264,1777,47.4],['Suínos – 91 a 119 dias',5846,1430,38.2],['Suínos – 119 a 147 dias',4869,1191,31.8],['Suínos – 147 a 175 dias',4195,1026,27.4]];
+    var sel=$('p_fase');T.forEach(function(t,i){var o=document.createElement('option');o.value=i;o.textContent=t[0];if(i===2)o.selected=true;sel.appendChild(o)});
+    bind(['p_fase','p_inc','p_a','p_d','p_e'],function(){var t=T[+sel.value],inc=(+$('p_inc').value||0)/1000;
+      $('p_out').innerHTML=bars([['Vitamina A',t[1],(+$('p_a').value||0)*inc,0],['Vitamina D3',t[2],(+$('p_d').value||0)*inc,0],['Vitamina E',t[3],(+$('p_e').value||0)*inc,1]],['Vitamina','Recomendado (UI/kg ração)','Fornecido (UI/kg ração)'])})})();
+
+  // ---- Figura 7.4
+  (function(){var info={Ca:'<b>Cálcio:</b> o excesso reduz a absorção de fósforo, zinco e manganês; o fitato se liga ao cálcio.',P:'<b>Fósforo:</b> compete com o cálcio; nos grãos, está em grande parte ligado ao fitato.',Mg:'<b>Magnésio:</b> em ruminantes, o excesso de potássio reduz sua absorção no rúmen.',K:'<b>Potássio:</b> em excesso, prejudica a absorção ruminal de magnésio e eleva a DCAD.',S:'<b>Enxofre:</b> forma tiomolibdatos com o molibdênio, que tornam o cobre indisponível.',Zn:'<b>Zinco:</b> absorção reduzida por cálcio, fitato e ferro; em excesso, reduz o cobre.',Mn:'<b>Manganês:</b> absorção reduzida pelo excesso de cálcio; compete com o ferro.',Fe:'<b>Ferro:</b> em excesso, reduz a absorção de cobre e de zinco.',Cu:'<b>Cobre:</b> antagonizado por molibdênio, enxofre, zinco e ferro.',Mo:'<b>Molibdênio:</b> com o enxofre, forma tiomolibdatos que capturam o cobre.',Se:'<b>Selênio:</b> atua com a vitamina E na defesa antioxidante (sinergia).',Co:'<b>Cobalto:</b> necessário para a síntese ruminal de vitamina B12 (sinergia).',Fit:'<b>Fitato:</b> liga fósforo, cálcio e zinco e reduz sua disponibilidade em monogástricos; a fitase libera parte deles.',VitE:'<b>Vitamina E:</b> trabalha com a glutationa peroxidase dependente de selênio.',B12:'<b>Vitamina B12:</b> contém cobalto e é produzida pela microbiota ruminal.'};
+    var labels={Ca:'Ca',P:'P',Mg:'Mg',K:'K',S:'S',Zn:'Zn',Mn:'Mn',Fe:'Fe',Cu:'Cu',Mo:'Mo',Se:'Se',Co:'Co',Fit:'Fitato',VitE:'Vit. E',B12:'B12'};
+    var net=document.querySelector('#f7-4 svg.net'),box=$('nInfo'),chips=$('nChips'),cur=null,edges=net.querySelectorAll('.edge[data-a]'),nodes=net.querySelectorAll('.mnode');
+    function sel(n){cur=cur===n?null:n;net.classList.toggle('sel',!!cur);var L={};if(cur)L[cur]=1;
+      edges.forEach(function(e){var on=cur&&(e.dataset.a===cur||e.dataset.b===cur);e.classList.toggle('on',!!on);if(on){L[e.dataset.a]=1;L[e.dataset.b]=1}});
+      nodes.forEach(function(g){g.classList.toggle('on',!!L[g.dataset.n])});chips.querySelectorAll('.chip').forEach(function(c){c.setAttribute('aria-pressed',String(c.dataset.n===cur))});
+      box.innerHTML=cur?info[cur]:'Nenhum elemento selecionado.'}
+    Object.keys(labels).forEach(function(k){var b=document.createElement('button');b.type='button';b.className='chip';b.dataset.n=k;b.textContent=labels[k];b.setAttribute('aria-pressed','false');b.addEventListener('click',function(){sel(k)});chips.appendChild(b)});
+    nodes.forEach(function(g){g.addEventListener('click',function(){sel(g.dataset.n)})});})();
+
+  // ---- DCAD
+  bind(['d_na','d_k','d_cl','d_s'],function(){var v=['d_na','d_k','d_cl','d_s'].map(function(i){return parseFloat($(i).value)||0});
+    var x=(v[0]/0.023+v[1]/0.039-v[2]/0.0355-v[3]/0.016)*10;$('d_out').innerHTML=(x>0?'+':'')+fmt(x,1)+' mEq/kg MS<small>'+(x<0?'dieta aniônica':'dieta catiônica')+'</small>'});
+
+  // ---- Sal mineral
+  bind(['s_an','s_dias','s_kg','s_esp','s_p','s_na','s_cu','s_co'],function(){var g=function(i){return parseFloat($(i).value)||0};
+    var an=g('s_an'),di=g('s_dias'),cons=(an>0&&di>0)?g('s_kg')*1000/(an*di):0,esp=g('s_esp'),p=esp>0?cons/esp*100:0,c=p>=95?'ok':p>=80?'mid':'bad';
+    var h='<p><b>Consumo real:</b> '+fmt(cons,1)+' g/animal/dia <span class="bar"><span class="'+c+'" style="width:'+Math.min(p,100)+'%"></span></span><b class="'+c+'t">'+fmt(p)+'% do esperado</b></p><table><thead><tr><th>Mineral</th><th>No consumo real</th><th>No consumo esperado</th></tr></thead><tbody>';
+    [['Fósforo',g('s_p'),'g',2],['Sódio',g('s_na'),'g',1],['Cobre',g('s_cu'),'mg',0],['Cobalto',g('s_co'),'mg',1]].forEach(function(r){h+='<tr><td>'+r[0]+'</td><td>'+fmt(cons*r[1]/1000,r[3])+' '+r[2]+'/dia</td><td>'+fmt(esp*r[1]/1000,r[3])+' '+r[2]+'/dia</td></tr>'});
+    $('s_out').innerHTML=h+'</tbody></table>'});
+
+  // ---- Testes
+  function quiz(boxId,scoreId,Q){var qb=$(boxId),sc=$(scoreId),done=0,ok=0;
+    Q.forEach(function(q,i){var d=document.createElement('div');d.className='q';d.innerHTML='<p>'+(i+1)+'. '+q[0]+'</p><div class="opts"></div><div class="fb" aria-live="polite"></div>';
+      var ops=d.querySelector('.opts'),fb=d.querySelector('.fb'),ans=false;
+      q[1].forEach(function(t,j){var b=document.createElement('button');b.className='opt';b.type='button';b.textContent='('+'abcd'[j]+') '+t;
+        b.addEventListener('click',function(){if(ans)return;ans=true;done++;if(j===q[2]){ok++;b.classList.add('ok');fb.textContent='Correto. '+q[3]}else{b.classList.add('no');ops.children[q[2]].classList.add('ok');fb.textContent='Resposta: ('+'abcd'[q[2]]+'). '+q[3]}sc.textContent='· '+ok+' de '+done+' corretas'});ops.appendChild(b)});
+      qb.appendChild(d)})}
+  quiz('q6','q6s',[
+    ['Um lote de vacas recebe apenas feno armazenado há mais de um ano, sem acesso a pasto verde. Qual vitamina apresenta maior risco de deficiência?',['Vitamina K','Vitamina A','Tiamina','Vitamina C'],1,'Os carotenos do feno oxidam-se durante o armazenamento.'],
+    ['Por que a vitamina A de um gato não pode ser atendida apenas com β-caroteno?',['Não absorve gordura','Praticamente não converte β-caroteno em retinol','A vitamina A é tóxica para gatos','Sintetiza retinol a partir do triptofano'],1,'O gato exige vitamina A pré-formada.'],
+    ['Em qual órgão ocorre a hidroxilação que origina o calcitriol?',['Pele','Fígado','Rim','Intestino'],2,'O fígado forma o calcidiol; o rim, sob estímulo do PTH, forma o calcitriol.'],
+    ['Pintos com incoordenação e hemorragia cerebelar respondem à vitamina E, mas não ao selênio. Diagnóstico mais provável?',['Diátese exsudativa','Encefalomalácia','Perose','Polineurite'],1,'A encefalomalácia não responde ao selênio.'],
+    ['Bovinos em pastagens pobres em cobalto emagrecem mesmo com forragem abundante. Qual vitamina deixa de ser sintetizada?',['Biotina','Folato','Cobalamina (B12)','Riboflavina'],2,'Sem cobalto, a microbiota ruminal não sintetiza B12.'],
+    ['Um suplemento tem 3.000 UI de vitamina E/kg e é fornecido a 150 g/dia. Quantas UI a vaca recebe por dia?',['3.000 UI','450 UI','20 UI','4.500 UI'],1,'0,150 kg × 3.000 UI/kg = 450 UI/dia.']]);
+  quiz('q7','q7s',[
+    ['Por que a deficiência de fósforo em bovinos a pasto pode estar associada ao botulismo?',['O fósforo inativa a toxina','A deficiência leva à osteofagia e à ingestão de carcaças contaminadas','O fósforo é necessário à vacina','A deficiência aumenta a absorção da toxina'],1,'A osteofagia expõe os animais à toxina presente em carcaças (Caso 7.1).'],
+    ['Em ruminantes, onde o magnésio é absorvido principalmente e qual mineral prejudica essa absorção?',['Intestino delgado; cálcio','Rúmen; potássio','Abomaso; sódio','Intestino grosso; fósforo'],1,'O excesso de potássio reduz a absorção ruminal de magnésio.'],
+    ['Que mineral, em excesso na água, pode causar polioencefalomalácia?',['Iodo','Enxofre','Zinco','Manganês'],1,'O sulfato pode ser reduzido a sulfeto de hidrogênio no rúmen.'],
+    ['Ovinos recebem suplemento para bovinos e apresentam icterícia e urina escura. Hipótese?',['Deficiência de cobalto','Intoxicação acumulativa por cobre','Deficiência de selênio','Excesso de sódio'],1,'Ovinos acumulam cobre no fígado com facilidade.'],
+    ['Por que o cobalto deve ser fornecido por via oral aos ruminantes?',['Porque injetado é tóxico','Porque a microbiota do rúmen precisa dele para produzir B12','Porque não é absorvido no intestino','Porque o fígado o destrói'],1,'É a microbiota ruminal que usa o cobalto para sintetizar B12.'],
+    ['Um lote de 100 bovinos consumiu 150 kg de suplemento em 30 dias. Qual o consumo por animal por dia?',['15 g','50 g','150 g','500 g'],1,'150 × 1.000 ÷ (100 × 30) = 50 g/animal/dia.']]);
+})();
+</script>
+
+</body>
+</html>
